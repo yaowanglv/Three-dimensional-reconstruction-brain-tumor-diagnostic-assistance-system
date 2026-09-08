@@ -11,7 +11,7 @@
 | 前端 | Vue 3 + Element Plus + Vite | 4000（开发） |
 | 后端 | Spring Boot 3 + MyBatis + MySQL | 9527 |
 | YOLO 检测 | Flask + 定制 Ultralytics | 5001 |
-| UNet 分割 | Flask + PyTorch | 3408 |
+| UNet 分割 | Flask + PyTorch（训练基于 [milesial/Pytorch-UNet](https://github.com/milesial/Pytorch-UNet)） | 3408 |
 | Mesh 重建 | Flask + NumPy/SciPy | 5002 |
 
 ## 目录结构
@@ -99,6 +99,8 @@ BRISC-2025/
 在本系统中：`detect_service/detect-api.py`（端口 5001）加载 `models/yolo/detect` 与 `models/yolo/mask` 的权重；BRISC 图像可作检测页、分割页的测试样本。
 
 ### 2. UNet 切片 / 三维重建：BraTS 切片
+
+UNet 训练基于 [milesial/Pytorch-UNet](https://github.com/milesial/Pytorch-UNet)。本系统在该仓库上增加了 `unet4engine.py` 等推理接口，以及 BraTS 切片数据和业务权重。
 
 对应本地：`D:\algorithms\Pytorch-UNet-master\data\threedim`
 
