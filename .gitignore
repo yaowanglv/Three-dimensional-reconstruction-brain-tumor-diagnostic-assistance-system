@@ -48,8 +48,9 @@ detect_service/tmp_unet_output/
 !models/**/*.onnx
 !models/**/*.pth
 
-# 文档（本地保留，不进仓库）
+# 文档与部署脚本（本地保留，不进仓库）
 docs/
+sh/
 
 # 系统
 Thumbs.db

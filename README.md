@@ -68,7 +68,7 @@ copy springb\src\main\resources\application-local.yml.example springb\src\main\r
 
 ## 不会进 Git 的内容
 
-`node_modules/`、`target/`、`dist/`、`uploads/`、`.idea/`、`.env`、`application-local.yml`、`docs/`、运行日志。UNet `.pth` 走 Git LFS；YOLO `.pt` / `.onnx` 直接提交。
+`node_modules/`、`target/`、`dist/`、`uploads/`、`.idea/`、`.env`、`application-local.yml`、`docs/`、`sh/`、运行日志。UNet `.pth` 走 Git LFS；YOLO `.pt` / `.onnx` 直接提交。
 
 ## Python 依赖说明
 
