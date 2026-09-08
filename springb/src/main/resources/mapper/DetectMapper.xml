@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.springb.mapper.DetectMapper">
+
+    <resultMap id="BaseResultMap" type="com.example.springb.entity.Detect">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="original_image_name" property="originalImageName"/>
+        <result column="original_image_url" property="originalImageUrl"/>
+        <result column="original_image_size" property="originalImageSize"/>
+        <result column="original_image_format" property="originalImageFormat"/>
+        <result column="result_image_url" property="resultImageUrl"/>
+        <result column="detection_data" property="detectionData"/>
+        <result column="segment_type" property="segmentType"/>
+        <result column="case_path" property="casePath"/>
+        <result column="output_path" property="outputPath"/>
+        <result column="total_slices" property="totalSlices"/>
+        <result column="service_type" property="serviceType"/>
+        <result column="input_size" property="inputSize"/>
+        <result column="model_format" property="modelFormat"/>
+        <result column="ai_model" property="aiModel"/>
+        <result column="ai_analysis_result" property="aiAnalysisResult"/>
+        <result column="ai_analysis_time" property="aiAnalysisTime"/>
+        <result column="detect_status" property="detectStatus"/>
+        <result column="ai_status" property="aiStatus"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="remark" property="remark"/>
+        <result column="detect_mode" property="detectMode"/>
+        <result column="detector_name" property="detectorName"/>
+        <result column="detector_username" property="detectorUsername"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+            d.*,
+            COALESCE(a.name, d.user_name) AS detector_name,
+            a.username AS detector_username
+        FROM detect d
+        LEFT JOIN `admin` a ON d.user_id = a.id
+        <where>
+            <if test="userId != null">
+                AND d.user_id = #{userId}
+            </if>
+            <if test="detectStatus != null">
+                AND d.detect_status = #{detectStatus}
+            </if>
+            <if test="aiStatus != null">
+                AND d.ai_status = #{aiStatus}
+            </if>
+            <if test="aiModel != null and aiModel != ''">
+                AND d.ai_model = #{aiModel}
+            </if>
+            <if test="createDate != null and createDate != ''">
+                AND DATE(d.create_time) = #{createDate}
+            </if>
+            <if test="aiUsed != null and aiUsed != ''">
+                <choose>
+                    <when test='aiUsed == "1"'>
+                        AND d.ai_model IS NOT NULL AND d.ai_model != ''
+                    </when>
+                    <when test='aiUsed == "0"'>
+                        AND (d.ai_model IS NULL OR d.ai_model = '')
+                    </when>
+                </choose>
+            </if>
+            <if test="detectMode != null and detectMode != ''">
+                AND d.detect_mode = #{detectMode}
+            </if>
+            <if test="idsArr != null and idsArr.length > 0">
+                AND d.id IN
+                <foreach collection="idsArr" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY d.create_time DESC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT
+            d.*,
+            COALESCE(a.name, d.user_name) AS detector_name,
+            a.username AS detector_username
+        FROM detect d
+        LEFT JOIN `admin` a ON d.user_id = a.id
+        WHERE d.id = #{id}
+    </select>
+
+    <update id="updateById">
+        UPDATE detect
+        <set>
+            <if test="resultImageUrl != null">result_image_url = #{resultImageUrl},</if>
+            <if test="detectionData != null">detection_data = #{detectionData},</if>
+            <if test="segmentType != null">segment_type = #{segmentType},</if>
+            <if test="casePath != null">case_path = #{casePath},</if>
+            <if test="outputPath != null">output_path = #{outputPath},</if>
+            <if test="totalSlices != null">total_slices = #{totalSlices},</if>
+            <if test="serviceType != null">service_type = #{serviceType},</if>
+            <if test="inputSize != null">input_size = #{inputSize},</if>
+            <if test="modelFormat != null">model_format = #{modelFormat},</if>
+            <if test="detectStatus != null">detect_status = #{detectStatus},</if>
+            <if test="aiModel != null">ai_model = #{aiModel},</if>
+            <if test="aiAnalysisResult != null">ai_analysis_result = #{aiAnalysisResult},</if>
+            <if test="aiAnalysisTime != null">ai_analysis_time = #{aiAnalysisTime},</if>
+            <if test="aiStatus != null">ai_status = #{aiStatus},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="detectMode != null">detect_mode = #{detectMode},</if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

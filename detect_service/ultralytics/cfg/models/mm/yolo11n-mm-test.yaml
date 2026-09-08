@@ -1,0 +1,87 @@
+# Ultralytics YOLO11 🚀 MultiModal Mid-level Fusion Configuration
+# YOLOMM RGB+X二元模态中期融合配置 - 使用DEA增强注意力融合
+# 策略：RGB和X模态独立特征提取，使用DEA模块进行高效跨模态融合
+# 适用场景：RGB和X模态特征互补性强，需要保持模态独特性并增强交互
+
+# Parameters
+nc: 80 # number of classes
+scales: # model compound scaling constants, i.e. 'model=yolo11n.yaml' will call yolo11.yaml with scale 'n'
+  # [depth, width, max_channels]
+  n: [0.50, 0.25, 1024] # YOLO11n summary: 319 layers, 2624080 parameters, 2624064 gradients, 6.6 GFLOPs
+  s: [0.50, 0.50, 1024] # YOLO11s summary: 319 layers, 9458752 parameters, 9458736 gradients, 21.7 GFLOPs
+  m: [0.50, 1.00, 512]  # YOLO11m summary: 409 layers, 20114688 parameters, 20114672 gradients, 68.5 GFLOPs
+  l: [1.00, 1.00, 512]  # YOLO11l summary: 631 layers, 25372160 parameters, 25372144 gradients, 87.6 GFLOPs
+  x: [1.00, 1.50, 512]  # YOLO11x summary: 631 layers, 56966176 parameters, 56966160 gradients, 196.4 GFLOPs
+
+# 多模态架构定义 - 通用RGB+X二元模态 + DEA融合增强
+# X模态类型由数据集配置或训练时指定，模型架构保持通用性
+
+# 双路径 backbone - RGB路径和X路径独立提取特征
+backbone:
+  # RGB路径 (层0-7) - 提取RGB特征到P4级别
+  - [-1, 1, Conv, [64, 3, 2], 'RGB']      # 0-P1/2 RGB路径起始
+  - [-1, 1, Conv, [128, 3, 2]]            # 1-P2/4
+  - [-1, 2, C3k2, [256, False, 0.25]]     # 2
+  - [-1, 1, Conv, [256, 3, 2]]            # 3-P3/8  
+  - [-1, 2, C3k2, [512, False, 0.25]]     # 4
+  - [-1, 1, Conv, [512, 3, 2]]            # 5-P4/16
+  - [-1, 2, C3k2, [512, True]]            # 6
+  - [-1, 1, SPPF, [512, 5]]               # 7 RGB特征提取结束
+
+  # X路径 (层8-15) - 提取X模态特征到P4级别  
+  - [-1, 1, Conv, [64, 3, 2], 'X']        # 8-P1/2 X路径起始（from=-1但实际从X模态输入）
+  - [-1, 1, Conv, [128, 3, 2]]            # 9-P2/4
+  - [-1, 2, C3k2, [256, False, 0.25]]     # 10
+  - [-1, 1, Conv, [256, 3, 2]]            # 11-P3/8
+  - [-1, 2, C3k2, [512, False, 0.25]]     # 12
+  - [-1, 1, Conv, [512, 3, 2]]            # 13-P4/16  
+  - [-1, 2, C3k2, [512, True]]            # 14
+  - [-1, 1, SPPF, [512, 5]]               # 15 X特征提取结束
+
+  # DEA中期融合层 (层16) - 使用DEA双增强注意力融合RGB和X特征
+  # DEA模块：替代传统Concat + C3k2 + C2PSA组合，提供更高效的跨模态融合
+  # 参数说明：[reduction, kernel_size] - reduction控制通道注意力压缩比，kernel_size控制空间感受野
+  - [[7, 15], 1, DEA, [16, 40]]           # 16 DEA融合：RGB(层7)和X(层15)特征
+                                           #    输入: 2×[B,512,40,40] 输出: [B,512,40,40]
+                                           #    reduction=16: 通道注意力压缩比
+                                           #    kernel_size=40: 匹配P4特征图尺寸
+
+# 检测头 - 基于DEA融合特征的多尺度检测头
+head:
+  # P4/16分支 - 从DEA融合特征开始
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]   # 17 融合特征上采样 40×40 → 80×80
+  - [-1, 2, C3k2, [512, False]]                  # 18 处理P4特征 (80×80)
+
+  # P3/8分支 - 继续上采样
+  - [-1, 1, nn.Upsample, [None, 2, "nearest"]]   # 19 继续上采样 80×80 → 160×160  
+  - [-1, 2, C3k2, [256, False]]                  # 20 处理P3特征 (160×160)
+
+  # P4/16分支回连
+  - [-1, 1, Conv, [256, 3, 2]]                   # 21 下采样 160×160 → 80×80
+  - [[-1, 18], 1, Concat, [1]]                   # 22 融合P4特征 (80×80 + 80×80)
+  - [-1, 2, C3k2, [512, False]]                  # 23 最终P4特征 (80×80)
+
+  # P5/32分支回连  
+  - [-1, 1, Conv, [512, 3, 2]]                   # 24 下采样 80×80 → 40×40
+  - [[-1, 16], 1, Concat, [1]]                   # 25 融合原始DEA特征 (40×40 + 40×40)
+  - [-1, 2, C3k2, [1024, False]]                 # 26 最终P5特征 (40×40)
+
+  - [[20, 23, 26], 1, Detect, [nc]]              # 27 Detect(P3, P4, P5)
+
+# DEA融合配置优势：
+# 1. 高效融合：DEA模块集成通道注意力和空间注意力，一步完成跨模态增强
+# 2. 参数优化：相比Concat+C3k2+C2PSA组合，DEA减少了网络深度和参数量
+# 3. 性能提升：DECA实现跨模态通道增强，DEPA实现跨模态空间增强
+# 4. 灵活配置：reduction和kernel_size可根据特征图尺寸和计算资源调整
+# 5. 即插即用：DEA模块完全兼容ultralytics框架，无需修改训练流程
+
+# DEA参数调优建议：
+# - reduction: 8-32 (值越小注意力越细粒度，计算量越大)
+# - kernel_size: 匹配或略小于特征图尺寸 (40适合P4层，20适合P5层)
+# - 不同尺度可使用不同DEA参数以适配特征图特性
+
+# 中期融合配置优势：
+# 1. 模态独立性：RGB和X模态分别提取特征，保持各自特点
+# 2. 特征互补：在中层特征级别融合，既保持细节又增强语义
+# 3. 灵活性高：可以调整融合点的层级和方式
+# 4. 适合场景：RGB和X模态特征互补但特性差异较大的情况 

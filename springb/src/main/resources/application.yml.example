@@ -1,0 +1,26 @@
+# 可提交的示例。复制为 application.yml 后不要填真实密钥。
+# 本地密钥请复制 application-local.yml.example -> application-local.yml
+
+server:
+  port: 9527
+
+spring:
+  config:
+    import: optional:classpath:application-local.yml
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/dsecond?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true}
+
+jwt:
+  secret: ${JWT_SECRET:}
+
+ai:
+  models:
+    deepseek:
+      api-key: ${DEEPSEEK_API_KEY:}
+    glm:
+      api-key: ${GLM_API_KEY:}
+    kimi:
+      api-key: ${KIMI_API_KEY:}

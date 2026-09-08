@@ -1,0 +1,56 @@
+# 依赖与构建
+node_modules/
+**/node_modules/
+**/target/
+**/dist/
+**/.vite/
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+.Python
+venv/
+.venv/
+env/
+
+# 密钥与本地配置
+.env
+.env.*
+!.env.example
+!.env.mcp.example
+application-local.yml
+**/application-local.yml
+
+# IDE / 工具
+.idea/
+.vscode/
+.agents/
+.claude/
+.edge-profile/
+*.iml
+
+# 运行时
+uploads/
+log/
+logs/
+*.log
+results/
+generated_images/
+detect_service/uploads/
+detect_service/results/
+detect_service/tmp_unet_case/
+detect_service/tmp_unet_output/
+
+# 权重：默认忽略超大导出；业务目录再单独放行
+*.engine
+*.trt
+# Git LFS 提交 .pth；.pt/.onnx 体积较小直接进 Git
+!models/**/*.pt
+!models/**/*.onnx
+!models/**/*.pth
+
+# 系统
+Thumbs.db
+Desktop.ini
+.DS_Store
+hs_err_pid*.log
+.codex_tmp_*

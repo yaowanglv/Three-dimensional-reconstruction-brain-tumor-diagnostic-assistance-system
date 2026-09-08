@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.springb.mapper.AdminMapper">
+
+
+
+    <!-- Mapper XML -->
+    <select id="selectAll" resultType="com.example.springb.entity.Admin">
+        SELECT * FROM `admin`
+        <where>
+            <if test="username != null">and username like concat('%', #{username}, '%')</if>
+            <if test="name != null">and name like concat('%', #{name}, '%')</if>
+            <if test="idsArr != null and idsArr.length > 0">
+                AND id IN
+                <foreach collection="idsArr" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <!-- 其他条件 -->
+
+        </where>
+        ORDER BY id DESC <!-- 添加倒序排序 -->
+    </select>
+
+
+<!--插入-->
+    <insert id="insert">
+        insert into `admin` (username,password,name,time,role)
+        values(#{username},#{password},#{name},#{time},#{role})
+    </insert>
+<!--   更新 -->
+    <update id="updateById">
+        update `admin`
+        <set>
+            <if test="username != null">username=#{username},</if>
+            <if test="password != null">password=#{password},</if>
+            <if test="name != null">name=#{name},</if>
+            <if test="time != null">time=#{time},</if>
+            <if test="role != null">role=#{role},</if>
+        </set>
+        where id=#{id}
+    </update>
+</mapper>

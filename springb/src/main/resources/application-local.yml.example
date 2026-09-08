@@ -1,0 +1,26 @@
+# 复制本文件为 application-local.yml 后填写，该文件已被 .gitignore 忽略。
+# JWT_SECRET 必须是 Base64，解码后至少 32 字节。可用：
+#   python -c "import os,base64; print(base64.b64encode(os.urandom(48)).decode())"
+
+spring:
+  datasource:
+    username: root
+    password: your_mysql_password
+    url: jdbc:mysql://localhost:3306/dsecond?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true
+
+jwt:
+  secret: REPLACE_WITH_BASE64_JWT_SECRET
+
+ai:
+  models:
+    deepseek:
+      api-key: your_deepseek_api_key
+    glm:
+      api-key: your_glm_api_key
+    kimi:
+      api-key: your_kimi_api_key
+
+feishu:
+  app-id: your_feishu_app_id
+  app-secret: your_feishu_app_secret
+  parent-node: your_feishu_folder_token

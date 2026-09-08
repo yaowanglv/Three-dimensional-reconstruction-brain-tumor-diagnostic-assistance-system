@@ -1,0 +1,68 @@
+server:
+  port: ${SERVER_PORT:9527}
+
+spring:
+  config:
+    import: optional:classpath:application-local.yml
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/dsecond?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2b8&allowPublicKeyRetrieval=true}
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 100MB
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+jwt:
+  secret: ${JWT_SECRET:}
+  access-token-expiration: 7200000
+  refresh-token-expiration: 604800000
+  token-prefix: "Bearer "
+  header: "Authorization"
+
+file:
+  upload:
+    path: uploads/
+  access:
+    url: ${FILE_ACCESS_URL:http://localhost:9527/files/}
+
+python:
+  detect:
+    url: ${PYTHON_DETECT_URL:http://localhost:5001}
+  segment:
+    url: ${PYTHON_SEGMENT_URL:http://localhost:3408}
+  mesh:
+    url: ${PYTHON_MESH_URL:http://localhost:5002}
+
+app:
+  public-backend-url: ${APP_PUBLIC_BACKEND_URL:http://localhost:9527}
+  batch-output-root: uploads/batch
+
+# 真实 Key 写在 application-local.yml 或环境变量，不要提交仓库
+ai:
+  models:
+    deepseek:
+      api-key: ${DEEPSEEK_API_KEY:}
+      endpoint: ${DEEPSEEK_ENDPOINT:https://api.deepseek.com/v1/chat/completions}
+      model-name: ${DEEPSEEK_MODEL:deepseek-chat}
+    glm:
+      api-key: ${GLM_API_KEY:}
+      endpoint: ${GLM_ENDPOINT:https://open.bigmodel.cn/api/paas/v4/chat/completions}
+      model-name: ${GLM_MODEL:glm-4}
+    kimi:
+      api-key: ${KIMI_API_KEY:}
+      endpoint: ${KIMI_ENDPOINT:https://api.moonshot.cn/v1/chat/completions}
+      model-name: ${KIMI_MODEL:moonshot-v1-8k}
+
+feishu:
+  app-id: ${FEISHU_APP_ID:}
+  app-secret: ${FEISHU_APP_SECRET:}
+  parent-node: ${FEISHU_PARENT_NODE:}

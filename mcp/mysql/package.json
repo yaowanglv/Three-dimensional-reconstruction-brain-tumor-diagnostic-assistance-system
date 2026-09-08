@@ -1,0 +1,12 @@
+{
+  "name": "brain-mcp-mysql",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MySQL MCP server for local development",
+  "scripts": {
+    "start": "mcp-server-mysql"
+  },
+  "dependencies": {
+    "@benborla29/mcp-server-mysql": "^2.0.8"
+  }
+}

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商业计划书转折页 03</title>
+  <style>
+    :root {
+      --bg: #f5f2f2;
+      --panel: #fffdfd;
+      --sidebar: #ede5e5;
+      --text: #171212;
+      --muted: #726767;
+      --line: #d7cccc;
+      --accent: #7d5f5f;
+      --accent-soft: #ddd0d0;
+      --accent-deep: #5f4343;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+
+    .layout {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 290px 1fr;
+    }
+
+    .sidebar {
+      background: var(--sidebar);
+      border-right: 1px solid var(--line);
+      padding: 28px 20px;
+      height: 100vh;
+      overflow-y: auto;
+      scroll-snap-type: y proximity;
+    }
+
+    .sidebar .header {
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar .header .mini {
+      font-size: 12px;
+      letter-spacing: 0.26em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .sidebar .header h2 {
+      margin: 0;
+      font-size: 27px;
+    }
+
+    .chapter-item {
+      scroll-snap-align: start;
+      padding: 16px 14px;
+      margin-bottom: 12px;
+      border: 1px solid var(--line);
+      background: rgba(255, 253, 253, 0.72);
+      position: relative;
+    }
+
+    .chapter-item.active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 6px;
+      background: var(--accent-deep);
+    }
+
+    .chapter-item .no {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 7px;
+    }
+
+    .chapter-item .title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      padding-left: 2px;
+    }
+
+    .chapter-item .desc {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--muted);
+      padding-left: 2px;
+    }
+
+    .main {
+      min-height: 100vh;
+      padding: 38px;
+      display: grid;
+      place-items: center;
+    }
+
+    .page {
+      width: min(1120px, 100%);
+      min-height: min(760px, calc(100vh - 76px));
+      background: var(--panel);
+      border: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      overflow: hidden;
+      box-shadow: 0 18px 46px rgba(23, 18, 18, 0.06);
+    }
+
+    .content {
+      padding: 76px 72px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .meta {
+      font-size: 15px;
+      color: var(--muted);
+      letter-spacing: 0.16em;
+      margin-bottom: 18px;
+    }
+
+    .big-no {
+      font-size: clamp(68px, 9vw, 132px);
+      font-weight: 700;
+      line-height: 0.95;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 66px);
+      line-height: 1.1;
+    }
+
+    p {
+      margin: 26px 0 0;
+      max-width: 34em;
+      font-size: 18px;
+      line-height: 1.9;
+      color: var(--muted);
+    }
+
+    .visual {
+      position: relative;
+      border-left: 1px solid var(--line);
+      background: linear-gradient(180deg, #faf6f6, #f4eeee);
+    }
+
+    .visual .shape {
+      position: absolute;
+      border: 1px solid rgba(23, 18, 18, 0.05);
+    }
+
+    .visual .a {
+      width: 54%;
+      height: 18%;
+      top: 13%;
+      left: 16%;
+      background: var(--accent-soft);
+    }
+
+    .visual .b {
+      width: 30%;
+      height: 44%;
+      right: 16%;
+      top: 24%;
+      background: rgba(125, 95, 95, 0.2);
+    }
+
+    .visual .c {
+      width: 58%;
+      height: 16%;
+      left: 12%;
+      bottom: 16%;
+      background: #ffffff;
+      border-color: var(--line);
+    }
+
+    .visual .bar {
+      width: 16px;
+      height: 58%;
+      left: 50%;
+      top: 21%;
+      transform: translateX(-50%);
+      background: var(--accent-deep);
+      border: none;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        height: auto;
+        max-height: 42vh;
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .main {
+        padding: 18px;
+      }
+
+      .page {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .visual {
+        min-height: 300px;
+        border-left: none;
+        border-top: 1px solid var(--line);
+      }
+
+      .content {
+        padding: 42px 30px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="header">
+        <div class="mini">Plan Structure</div>
+        <h2>章节目录</h2>
+      </div>
+      <div class="chapter-item">
+        <div class="no">01 / Company</div>
+        <div class="title">公司概况</div>
+        <div class="desc">介绍企业定位、发展阶段与整体业务边界。</div>
+      </div>
+      <div class="chapter-item">
+        <div class="no">02 / Team</div>
+        <div class="title">团队与组织</div>
+        <div class="desc">强调关键岗位能力与组织执行基础。</div>
+      </div>
+      <div class="chapter-item active">
+        <div class="no">03 / Financial Plan</div>
+        <div class="title">财务规划</div>
+        <div class="desc">展示收入预测、成本结构、现金流与增长节奏。</div>
+      </div>
+      <div class="chapter-item">
+        <div class="no">04 / Risk</div>
+        <div class="title">风险与对策</div>
+        <div class="desc">识别关键不确定性并提出应对机制。</div>
+      </div>
+      <div class="chapter-item">
+        <div class="no">05 / Milestone</div>
+        <div class="title">实施路径</div>
+        <div class="desc">安排阶段目标、资源投入与关键时间节点。</div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="page">
+        <div class="content">
+          <div class="meta">Chapter Three / Transition</div>
+          <div class="big-no">03</div>
+          <h1>财务规划</h1>
+          <p>本章节用于承接前面的市场与业务逻辑，并进一步用财务数据说明项目的可持续性、成长性与资金使用效率。整体更适合偏成熟、偏审慎的商业计划书气质。</p>
+        </div>
+        <div class="visual">
+          <div class="shape a"></div>
+          <div class="shape b"></div>
+          <div class="shape c"></div>
+          <div class="shape bar"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

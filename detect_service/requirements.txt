@@ -1,0 +1,11 @@
+flask>=3.0.0
+flask-cors>=4.0.0
+pillow>=10.0.0
+numpy>=1.23.0
+opencv-python>=4.8.0
+scipy>=1.10.0
+torch>=2.0.0
+torchvision>=0.15.0
+# 检测服务使用本目录 vendored 的 ultralytics，不要再 pip install 官方包覆盖
+# pip install -e .  仅在需要安装包元数据时使用
+# TensorRT / pycuda 为可选加速，未安装时 unet4engine.py 回退到 PyTorch

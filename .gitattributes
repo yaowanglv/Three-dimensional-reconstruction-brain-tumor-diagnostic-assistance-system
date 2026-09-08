@@ -1,0 +1,2 @@
+# UNet PyTorch 权重大于 GitHub 100MB 硬限制，必须走 Git LFS
+*.pth filter=lfs diff=lfs merge=lfs -text
