@@ -48,6 +48,9 @@ detect_service/tmp_unet_output/
 !models/**/*.onnx
 !models/**/*.pth
 
+# 文档（本地保留，不进仓库）
+docs/
+
 # 系统
 Thumbs.db
 Desktop.ini

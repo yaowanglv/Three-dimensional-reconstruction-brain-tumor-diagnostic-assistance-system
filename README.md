@@ -22,7 +22,6 @@ springb/             Java 后端
 detect_service/      Python 推理服务（detect-api / unet4engine / mesh-api）
 models/              业务权重（YOLO 框/mask，UNet .pth）
 sql/                 仅结构的建库脚本
-docs/                需求与开发文档
 mcp/mysql/           可选 MySQL MCP
 ```
 
@@ -69,7 +68,7 @@ copy springb\src\main\resources\application-local.yml.example springb\src\main\r
 
 ## 不会进 Git 的内容
 
-`node_modules/`、`target/`、`dist/`、`uploads/`、`.idea/`、`.env`、`application-local.yml`、运行日志。UNet `.pth` 走 Git LFS；YOLO `.pt` / `.onnx` 直接提交。
+`node_modules/`、`target/`、`dist/`、`uploads/`、`.idea/`、`.env`、`application-local.yml`、`docs/`、运行日志。UNet `.pth` 走 Git LFS；YOLO `.pt` / `.onnx` 直接提交。
 
 ## Python 依赖说明
 
